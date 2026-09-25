@@ -1,0 +1,69 @@
+name: Deploy client to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            client/package-lock.json
+            contracts/package-lock.json
+
+      # Compile contracts so the latest ABI is available for the sync script.
+      - name: Install contracts deps & compile
+        working-directory: contracts
+        run: |
+          npm ci
+          npx hardhat build
+
+      # If you deployed the registry to Sepolia, store the address in the repo
+      # variable CERTICHAIN_ADDRESS_SEPOLIA and it will be baked into the build.
+      - name: Sync registry artifacts into client (optional Sepolia address)
+        working-directory: contracts
+        env:
+          CERTICHAIN_ADDRESS_SEPOLIA: ${{ vars.CERTICHAIN_ADDRESS_SEPOLIA }}
+        run: |
+          if [ -n "$CERTICHAIN_ADDRESS_SEPOLIA" ]; then
+            REGISTRY_ADDRESS_SEPOLIA="$CERTICHAIN_ADDRESS_SEPOLIA" node scripts/sync-registry.js sepolia
+          else
+            echo "CERTICHAIN_ADDRESS_SEPOLIA not set — building with committed deployments"
+          fi
+
+      - name: Install client deps
+        working-directory: client
+        run: npm ci
+      - name: Build client
+        working-directory: client
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: client/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

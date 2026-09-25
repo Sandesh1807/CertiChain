@@ -1,0 +1,22 @@
+{
+  "name": "@certichain/contracts",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "CertiChain smart contracts (Hardhat 3 + ethers v6)",
+  "scripts": {
+    "compile": "hardhat build",
+    "test": "hardhat test",
+    "chain": "hardhat node",
+    "deploy:registry:local": "hardhat run scripts/deploy-registry.js --network localhost",
+    "deploy:registry:sepolia": "hardhat run scripts/deploy-registry.js --network sepolia",
+    "sync:registry:local": "node scripts/sync-registry.js local",
+    "sync:registry:sepolia": "node scripts/sync-registry.js sepolia",
+    "seed:local": "hardhat run scripts/demo-seed.js --network localhost",
+    "seed:sepolia": "hardhat run scripts/demo-seed.js --network sepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox-mocha-ethers": "^3.0.0",
+    "hardhat": "^3.0.6"
+  }
+}

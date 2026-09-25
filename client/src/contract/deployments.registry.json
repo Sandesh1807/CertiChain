@@ -1,0 +1,532 @@
+{
+  "CertificateRegistry": {
+    "abi": [
+      {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+      },
+      {
+        "inputs": [],
+        "name": "AlreadyRevoked",
+        "type": "error"
+      },
+      {
+        "inputs": [],
+        "name": "DuplicateCertId",
+        "type": "error"
+      },
+      {
+        "inputs": [],
+        "name": "EmptyInput",
+        "type": "error"
+      },
+      {
+        "inputs": [],
+        "name": "FutureIssueDate",
+        "type": "error"
+      },
+      {
+        "inputs": [],
+        "name": "InstitutionMismatch",
+        "type": "error"
+      },
+      {
+        "inputs": [],
+        "name": "InstitutionNotFound",
+        "type": "error"
+      },
+      {
+        "inputs": [],
+        "name": "NotFound",
+        "type": "error"
+      },
+      {
+        "inputs": [],
+        "name": "NotIssuer",
+        "type": "error"
+      },
+      {
+        "inputs": [],
+        "name": "NotOwner",
+        "type": "error"
+      },
+      {
+        "inputs": [],
+        "name": "TooLong",
+        "type": "error"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "string",
+            "name": "certIdHashTopic",
+            "type": "string"
+          },
+          {
+            "indexed": false,
+            "internalType": "string",
+            "name": "certId",
+            "type": "string"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "issuer",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "uint32",
+            "name": "institutionId",
+            "type": "uint32"
+          },
+          {
+            "indexed": false,
+            "internalType": "bytes32",
+            "name": "studentHash",
+            "type": "bytes32"
+          },
+          {
+            "indexed": false,
+            "internalType": "bytes32",
+            "name": "certHash",
+            "type": "bytes32"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint64",
+            "name": "issueDate",
+            "type": "uint64"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint64",
+            "name": "issuedAt",
+            "type": "uint64"
+          }
+        ],
+        "name": "CertificateIssued",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "string",
+            "name": "certId",
+            "type": "string"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint64",
+            "name": "revokedAt",
+            "type": "uint64"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "by",
+            "type": "address"
+          },
+          {
+            "indexed": false,
+            "internalType": "string",
+            "name": "reason",
+            "type": "string"
+          }
+        ],
+        "name": "CertificateRevoked",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "uint32",
+            "name": "institutionId",
+            "type": "uint32"
+          },
+          {
+            "indexed": false,
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "by",
+            "type": "address"
+          }
+        ],
+        "name": "InstitutionRegistered",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "issuer",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "uint32",
+            "name": "institutionId",
+            "type": "uint32"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "by",
+            "type": "address"
+          }
+        ],
+        "name": "IssuerAdded",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "issuer",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "by",
+            "type": "address"
+          }
+        ],
+        "name": "IssuerRemoved",
+        "type": "event"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "issuer",
+            "type": "address"
+          },
+          {
+            "internalType": "uint32",
+            "name": "institutionId",
+            "type": "uint32"
+          }
+        ],
+        "name": "addIssuer",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "certId",
+            "type": "string"
+          }
+        ],
+        "name": "getCertificate",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "studentHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "certHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "address",
+                "name": "issuer",
+                "type": "address"
+              },
+              {
+                "internalType": "uint32",
+                "name": "institutionId",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint64",
+                "name": "issuedAt",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "issueDate",
+                "type": "uint64"
+              },
+              {
+                "internalType": "bool",
+                "name": "exists",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "revoked",
+                "type": "bool"
+              }
+            ],
+            "internalType": "struct CertificateRegistry.Certificate",
+            "name": "",
+            "type": "tuple"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint32",
+            "name": "id",
+            "type": "uint32"
+          }
+        ],
+        "name": "getInstitution",
+        "outputs": [
+          {
+            "internalType": "string",
+            "name": "",
+            "type": "string"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "institutionCount",
+        "outputs": [
+          {
+            "internalType": "uint32",
+            "name": "",
+            "type": "uint32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "certId",
+            "type": "string"
+          }
+        ],
+        "name": "isCertificateValid",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "valid",
+            "type": "bool"
+          },
+          {
+            "internalType": "string",
+            "name": "status",
+            "type": "string"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "issuer",
+            "type": "address"
+          }
+        ],
+        "name": "isIssuer",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "certId",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "studentHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "certHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "issueDate",
+            "type": "uint64"
+          }
+        ],
+        "name": "issueCertificate",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "issuer",
+            "type": "address"
+          }
+        ],
+        "name": "issuerInstitutionId",
+        "outputs": [
+          {
+            "internalType": "uint32",
+            "name": "",
+            "type": "uint32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          }
+        ],
+        "name": "registerInstitution",
+        "outputs": [
+          {
+            "internalType": "uint32",
+            "name": "id",
+            "type": "uint32"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "issuer",
+            "type": "address"
+          }
+        ],
+        "name": "removeIssuer",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "certId",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "reason",
+            "type": "string"
+          }
+        ],
+        "name": "revokeCertificate",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "certId",
+            "type": "string"
+          }
+        ],
+        "name": "verifyCertificate",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "ok",
+            "type": "bool"
+          },
+          {
+            "internalType": "string",
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "issuer",
+            "type": "address"
+          },
+          {
+            "internalType": "uint32",
+            "name": "institutionId",
+            "type": "uint32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "studentHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "certHash",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      }
+    ],
+    "fromBlock": 3,
+    "defaultInstitution": {
+      "id": 1,
+      "name": "CertiChain Demo University"
+    },
+    "addresses": {
+      "31337": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+    }
+  }
+}

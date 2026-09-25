@@ -1,0 +1,21 @@
+{
+  "name": "certichain",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CertiChain — blockchain-based certificate verification platform (hackathon MVP)",
+  "scripts": {
+    "install:all": "npm --prefix contracts install && npm --prefix client install",
+    "chain": "npm --prefix contracts run chain",
+    "test": "npm --prefix contracts test",
+    "compile": "npm --prefix contracts run compile",
+    "deploy:registry:local": "npm --prefix contracts run deploy:registry:local",
+    "deploy:registry:sepolia": "npm --prefix contracts run deploy:registry:sepolia",
+    "sync:registry:local": "npm --prefix contracts run sync:registry:local",
+    "sync:registry:sepolia": "npm --prefix contracts run sync:registry:sepolia",
+    "seed:local": "npm --prefix contracts run seed:local",
+    "dev": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "preview": "npm --prefix client run preview"
+  },
+  "license": "MIT"
+}

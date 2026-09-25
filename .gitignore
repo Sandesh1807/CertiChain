@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Builds
+client/dist/
+contracts/cache/
+contracts/artifacts/
+contracts/types/
+
+# Env / secrets
+.env
+.env.local
+contracts/.env
+contracts/.env.local
+
+# Local chain state / generated deployment maps
+contracts/deployments.local.json
+contracts/deployments.registry.local.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local agent tooling
+.freebuff/
