@@ -1,8 +1,11 @@
 import { defineConfig } from "hardhat/config";
 import hardhatToolboxMochaEthers from "@nomicfoundation/hardhat-toolbox-mocha-ethers";
+import dotenv from "dotenv";
 
-// Hardhat 3: config variables read the environment without baking secrets
-// into the config. `.env` is loaded by the toolbox via dotenv.
+// Load contracts/.env (gitignored) so SEPOLIA_* never appear in this file or
+// in the repo. Precedence: real environment variables win over .env values.
+dotenv.config();
+
 const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com";
 
 export default defineConfig({
