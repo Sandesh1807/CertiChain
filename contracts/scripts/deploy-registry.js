@@ -29,6 +29,16 @@ const extraIssuers = (process.env.REGISTRY_EXTRA_ISSUERS || "")
 
 const [deployer] = await ethers.getSigners();
 
+if (!deployer) {
+  console.error(
+    "\nNo deployer account is configured for this network.\n" +
+      "The `sepolia` network in hardhat.config.js reads SEPOLIA_PRIVATE_KEY from contracts/.env\n" +
+      "(see .env.example). Fill it with a BURNER wallet key funded with Sepolia ETH from a faucet,\n" +
+      "then re-run the deploy command. Nothing was sent on-chain.\n"
+  );
+  process.exit(1);
+}
+
 console.log("Deploying CertificateRegistry with deployer:", deployer.address);
 
 const registry = await ethers.deployContract("CertificateRegistry");

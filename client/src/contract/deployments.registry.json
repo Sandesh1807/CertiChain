@@ -520,13 +520,13 @@
         "type": "function"
       }
     ],
-    "fromBlock": 3,
+    "fromBlock": 6,
     "defaultInstitution": {
       "id": 1,
       "name": "CertiChain Demo University"
     },
     "addresses": {
-      "31337": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+      "31337": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
     }
   }
 }

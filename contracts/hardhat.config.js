@@ -4,9 +4,15 @@ import dotenv from "dotenv";
 
 // Load contracts/.env (gitignored) so SEPOLIA_* never appear in this file or
 // in the repo. Precedence: real environment variables win over .env values.
+// (Hardhat 3 also injects .env natively; explicit dotenv keeps this true
+// regardless of Hardhat version.)
 dotenv.config();
 
-const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com";
+// Never commit a real key: SEPOLIA_PRIVATE_KEY lives only in contracts/.env
+// (gitignored). Use a burner wallet funded with testnet ETH from a faucet.
+const SEPOLIA_PRIVATE_KEY = (process.env.SEPOLIA_PRIVATE_KEY || "").trim();
+const SEPOLIA_RPC_URL =
+  (process.env.SEPOLIA_RPC_URL || "").trim() || "https://ethereum-sepolia-rpc.publicnode.com";
 
 export default defineConfig({
   plugins: [hardhatToolboxMochaEthers],
@@ -33,9 +39,9 @@ export default defineConfig({
       chainType: "l1",
       chainId: 11155111,
       url: SEPOLIA_RPC_URL,
-      accounts: process.env.SEPOLIA_PRIVATE_KEY
-        ? [process.env.SEPOLIA_PRIVATE_KEY]
-        : [],
+      // Empty when unset: `getSigners()` returns [] and the deploy script
+      // exits with a clear setup message instead of a cryptic TypeError.
+      accounts: SEPOLIA_PRIVATE_KEY ? [SEPOLIA_PRIVATE_KEY] : [],
     },
   },
   test: {

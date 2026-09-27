@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { network } from "hardhat";
@@ -20,7 +20,8 @@ import { network } from "hardhat";
  *                             + "|" + yyyy-mm-dd)
  */
 const { ethers } = await network.create();
-
+const IS_SEPOLIA =
+  Number((await ethers.provider.getNetwork()).chainId) === 11155111;
 const INSTITUTION = "CertiChain Demo University";
 const ISSUE_DATE = 1787000000n; // matches the canonical demo issue date
 const ISSUE_DATE_ISO = "2026-09-23";
@@ -36,8 +37,28 @@ const certCommit = (course) =>
   ethers.keccak256(ethers.toUtf8Bytes(`certichain:cert:v1:${course.trim()}|${INSTITUTION}|${ISSUE_DATE_ISO}`));
 
 const [deployer] = await ethers.getSigners();
-const deploymentFile = resolve(dirname(fileURLToPath(import.meta.url)), "..", "deployments.registry.local.json");
-const registryAddress = process.env.REGISTRY_ADDRESS || JSON.parse(readFileSync(deploymentFile, "utf8")).CertificateRegistry.address;
+if (!deployer) {
+  console.error(
+    "\nNo signer available for network " +
+      (IS_SEPOLIA ? "11155111 (sepolia)" : "31337 (local)") +
+      ".\nSet SEPOLIA_PRIVATE_KEY in contracts/.env (burner wallet only) and re-run."
+  );
+  process.exit(1);
+}
+const deploymentFile = resolve(
+  dirname(fileURLToPath(import.meta.url)),
+  "..",
+  IS_SEPOLIA ? "deployments.registry.sepolia.json" : "deployments.registry.local.json"
+);
+if (!existsSync(deploymentFile)) {
+  console.error(
+    `\nDeployment record not found: ${deploymentFile}\n` +
+      `Deploy first (npm run deploy:registry:${IS_SEPOLIA ? "sepolia" : "local"}) or set REGISTRY_ADDRESS.`
+  );
+  process.exit(1);
+}
+const registryAddress =
+  process.env.REGISTRY_ADDRESS || JSON.parse(readFileSync(deploymentFile, "utf8")).CertificateRegistry.address;
 const registry = await ethers.getContractAt("CertificateRegistry", registryAddress);
 
 const myNonce = await ethers.provider.getTransactionCount(deployer.address, "pending");
